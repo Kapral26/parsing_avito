@@ -1,4 +1,4 @@
-#! /usr/bin/python3.5
+##! /usr/bin/python3.5
 
 # План
 # 1. Сколько страниц
@@ -25,15 +25,16 @@ from multiprocessing import Pool
 from random import choice, uniform
 from time import sleep
 from os import environ
+from platform import system 
 
 array_spec_words = ['suzuki', 'kawasaki', 'honda',
-                    'yamaha', 'спорт', 'дорожник', 'нейкид', 'стрит-файтер']
+					'yamaha', 'спорт', 'дорожник', 'нейкид', 'стрит-файтер']
 
 
 template_task = "https://www.avito.ru/krasnodarskiy_kray/mototsikly_i_mototehnika/mototsikly?p="
 
 months = ['Января',	'Февраля',	'Марта',	'Апреля',	'Мая',	'Июня',
-          'Июля',	'Августа', 'Сентября',	'Октября',	'Ноября',	'Декабря']
+		  'Июля',	'Августа', 'Сентября',	'Октября',	'Ноября',	'Декабря']
 
 
 class page_info:
@@ -41,7 +42,8 @@ class page_info:
 	def __init__(self, link, usr_agent=None, proxy=None):
 		self.link = link
 		self.usr_agent = usr_agent
-		self.proxy = proxy
+
+		self.proxy = proxy
 
 	def get_html(self):
 		r = requests.get(self.link, headers=self.usr_agent, proxies=self.proxy)
@@ -123,56 +125,61 @@ class page_info:
 
 
 def main():
-	home_dir = environ['HOME']
-	# start = datetime.now()
-	usr_agnts = open(home_dir + '/python_scripts/user_agents.txt').read().split('\n')
-	proxys = open(home_dir + '/python_scripts/proxy_list.txt').read().split('\n')
+	print(system())
+	if system() != 'Windows':
+		home_dir = environ['HOME']
+		# start = datetime.now()
+		usr_agent = home_dir + '/python_scripts/user_agents.txt'
+		proxy = home_dir + '/python_scripts/proxy_list.txt'
+	else:
+		usr_agent = 'D:\\Python\\parsing_avito\\user_agents.txt'
+		proxy = 'D:\\Python\\parsing_avito\\proxy_list.txt'
+
+
+	usr_agnts = open(usr_agent).read().split('\n')
+	proxys = open(proxy).read().split('\n')
 	first_page = "https://www.avito.ru/krasnodarskiy_kray/mototsikly_i_mototehnika/mototsikly?p=1"
 	for chanse in range(20):
 		sleep(uniform(3,6))
 		proxy = {'http': 'http://'+choice(proxys)}
 		usr_agnt = {'User-Agent': choice(usr_agnts)}
-		main_page = page_info(first_page, usr_agnt, proxy)
-		html_text = main_page.get_html()
-		last_page = main_page.get_last_page(html_text)
 		print(chanse)
-		#try:
-			#main_page = page_info(first_page, usr_agnt, proxy)
-			#html_text = main_page.get_html()
-			#last_page = main_page.get_last_page(html_text)
-			#print(last_page)
-			#exit()
-		#except:
-			#continue
+		try:
+			main_page = page_info(first_page, usr_agnt, proxy)
+			html_text = main_page.get_html()
+			last_page = main_page.get_last_page(html_text)
+			print(last_page)
+		except:
+			continue
 
-    # all_links_page = []
-    # count = 0
+	# all_links_page = []
+	# count = 0
   #while len(all_links_page) == 0:
-     #	sleep(uniform(3,6))
-    # 	proxy = {'http': 'http://'+choice(proxys)}
-    # 	usr_agnt = {'User-Agent': choice(usr_agnts)}
-    # 	try:
-    # 		all_links_page = get_all_links_page(first_page)
-    # 	except:
-    # 		continue
-    # 	all_links_page = get_all_links_page(first_page)
-    # 	count += 1
-    # 	print(count)
-    # for task in range(1000):
-    # 	sleep(uniform(3,6))
-    # 	proxy = {'http': 'http://'+choice(proxys)}
-    # 	usr_agnt = {'User-Agent': choice(usr_agnts)}
-    # 	print(proxy, usr_agnt)
-    # 	for num_list in all_links_page:
-    # 		try:
-    # 			make_all(num_list, usr_agnt, proxy)
-    # 		except:
-    # 			continue
-    # 		make_all(num_list, usr_agnt, proxy)
-    # end = datetime.now()
-    # total = end - start
-    # print(str(total))
+	 #	sleep(uniform(3,6))
+	# 	proxy = {'http': 'http://'+choice(proxys)}
+	# 	usr_agnt = {'User-Agent': choice(usr_agnts)}
+	# 	try:
+	# 		all_links_page = get_all_links_page(first_page)
+	# 	except:
+	# 		continue
+	# 	all_links_page = get_all_links_page(first_page)
+	# 	count += 1
+	# 	print(count)
+	# for task in range(1000):
+	# 	sleep(uniform(3,6))
+	# 	proxy = {'http': 'http://'+choice(proxys)}
+	# 	usr_agnt = {'User-Agent': choice(usr_agnts)}
+	# 	print(proxy, usr_agnt)
+	# 	for num_list in all_links_page:
+	# 		try:
+	# 			make_all(num_list, usr_agnt, proxy)
+	# 		except:
+	# 			continue
+	# 		make_all(num_list, usr_agnt, proxy)
+	# end = datetime.now()
+	# total = end - start
+	# print(str(total))
 
 
 if __name__ == "__main__":
-    main()
+	main()
