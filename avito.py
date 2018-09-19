@@ -6,7 +6,7 @@
 # 3.  Собрать данные
 
 
-# #TODO 
+# #TODO
 # Надо добавлять в БД и в файл
 # проверять чтобы link был уникальным
 # добавить возможность достать тел.
@@ -25,29 +25,32 @@ from multiprocessing import Pool
 from random import choice, uniform
 from time import sleep
 
-array_spec_words = ['suzuki', 'kawasaki', 'honda', 'yamaha', 'спорт', 'дорожник', 'нейкид', 'стрит-файтер']
+array_spec_words = ['suzuki', 'kawasaki', 'honda',
+                    'yamaha', 'спорт', 'дорожник', 'нейкид', 'стрит-файтер']
 
 
 template_task = "https://www.avito.ru/krasnodarskiy_kray/mototsikly_i_mototehnika/mototsikly?p="
 
-months = ['Января',	'Февраля',	'Марта',	'Апреля',	'Мая',	'Июня',	'Июля',	'Августа', 'Сентября',	'Октября',	'Ноября',	'Декабря']
+months = ['Января',	'Февраля',	'Марта',	'Апреля',	'Мая',	'Июня',
+          'Июля',	'Августа', 'Сентября',	'Октября',	'Ноября',	'Декабря']
+
 
 class page_info:
 
-	def __init__(self, link):
-		self.link = link
+    def __init__(self, link):
+        self.link = link
 
-	def get_html(self, useragent=None, proxy=None):
-		r = requests.get(self.link, headers=useragent, proxies=proxy)
-		self.text_page =  r.text
+    def get_html(self, useragent=None, proxy=None):
+        r = requests.get(self.link, headers=useragent, proxies=proxy)
+        self.text_page = r.text
 
-	def get_last_page(self, html):
-		html = self.text_page
-		soup = BeautifulSoup(html, 'lxml')
-		last_page = soup.find('a', class_='pagination-page', text='Последняя' )
-		# print(last_page)
-		num_last_page = last_page.get('href')[-2:]
-		return int(num_last_page)+1
+    def get_last_page(self, html):
+        html = self.text_page
+        soup = BeautifulSoup(html, 'lxml')
+        last_page = soup.find('a', class_='pagination-page', text='Последняя')
+        print(last_page)
+        num_last_page = last_page.get('href')[-2:]
+        return int(num_last_page)+1
 
 # def write_csv(data):
 # 	with open('main.csv', 'a', newline='') as f:
@@ -93,7 +96,7 @@ class page_info:
 # 				print(count)
 # 			else:
 # 				continue
-	
+
 # 	# try:
 # 	# 	name = soup.find('a', class_='item-description-title-link').find('span').text.strip()
 # 	# except:
@@ -114,48 +117,46 @@ class page_info:
 # 		url = template_task + str(i)
 # 		all_pages.append(url)
 # 	return all_pages
-	
 
 
 def main():
-	# start = datetime.now()
-	first_page = "https://www.avito.ru/krasnodarskiy_kray/mototsikly_i_mototehnika/mototsikly?p=1"
-	main_page = page_info(first_page)
-	html_text = main_page.get_html()
-	last_page = main_page.get_last_page(html_text)
-	print(last_page)
+    # start = datetime.now()
+    first_page = "https://www.avito.ru/krasnodarskiy_kray/mototsikly_i_mototehnika/mototsikly?p=1"
+    main_page = page_info(first_page)
+    html_text = main_page.get_html()
+    last_page = main_page.get_last_page(html_text)
+    print(last_page)
 
-	# usr_agnts = open('/python_scripts/user_agents.txt').read().split('\n')
-	# proxys = open('/python_scripts/proxy_list.txt').read().split('\n')
-	# all_links_page = []
-	# count = 0
-	# while len(all_links_page) == 0:
-	# 	sleep(uniform(3,6))
-	# 	proxy = {'http': 'http://'+choice(proxys)}
-	# 	usr_agnt = {'User-Agent': choice(usr_agnts)}
-	# 	try:
-	# 		all_links_page = get_all_links_page(first_page)
-	# 	except:
-	# 		continue
-	# 	all_links_page = get_all_links_page(first_page)
-	# 	count += 1
-	# 	print(count)
-	# for task in range(1000):
-	# 	sleep(uniform(3,6))
-	# 	proxy = {'http': 'http://'+choice(proxys)}
-	# 	usr_agnt = {'User-Agent': choice(usr_agnts)}
-	# 	print(proxy, usr_agnt)
-	# 	for num_list in all_links_page:
-	# 		try:
-	# 			make_all(num_list, usr_agnt, proxy)
-	# 		except:
-	# 			continue			
-	# 		make_all(num_list, usr_agnt, proxy)
-	# end = datetime.now()
-	# total = end - start
-	# print(str(total))
-		
+    # usr_agnts = open('/python_scripts/user_agents.txt').read().split('\n')
+    # proxys = open('/python_scripts/proxy_list.txt').read().split('\n')
+    # all_links_page = []
+    # count = 0
+    # while len(all_links_page) == 0:
+    # 	sleep(uniform(3,6))
+    # 	proxy = {'http': 'http://'+choice(proxys)}
+    # 	usr_agnt = {'User-Agent': choice(usr_agnts)}
+    # 	try:
+    # 		all_links_page = get_all_links_page(first_page)
+    # 	except:
+    # 		continue
+    # 	all_links_page = get_all_links_page(first_page)
+    # 	count += 1
+    # 	print(count)
+    # for task in range(1000):
+    # 	sleep(uniform(3,6))
+    # 	proxy = {'http': 'http://'+choice(proxys)}
+    # 	usr_agnt = {'User-Agent': choice(usr_agnts)}
+    # 	print(proxy, usr_agnt)
+    # 	for num_list in all_links_page:
+    # 		try:
+    # 			make_all(num_list, usr_agnt, proxy)
+    # 		except:
+    # 			continue
+    # 		make_all(num_list, usr_agnt, proxy)
+    # end = datetime.now()
+    # total = end - start
+    # print(str(total))
 
 
 if __name__ == "__main__":
-	main()
+    main()
